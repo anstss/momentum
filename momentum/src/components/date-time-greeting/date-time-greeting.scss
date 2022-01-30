@@ -1,0 +1,76 @@
+.date-time {
+  .time {
+    font-size: 120px;
+  }
+
+  .date {
+    font-size: 30px;
+    margin: 20px 0;
+  }
+
+  .greeting {
+    font-size: 60px;
+
+    &__input {
+      color: inherit;
+      font-size: inherit;
+      height: auto;
+      line-height: normal;
+    }
+
+    &__input,
+    &__input:focus {
+      border: none !important;
+      box-shadow: none !important;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .date-time {
+    .time {
+      font-size: 100px;
+    }
+
+    .date {
+      font-size: 25px;
+    }
+
+    .greeting {
+      font-size: 40px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .date-time {
+    .time {
+      font-size: 70px;
+    }
+
+    .date {
+      font-size: 18px;
+      margin: 15px 0;
+    }
+
+    .greeting {
+      font-size: 28px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .date-time {
+    .time {
+      font-size: 50px;
+    }
+
+    .date {
+      font-size: 16px;
+    }
+
+    .greeting {
+      font-size: 22px;
+    }
+  }
+}
