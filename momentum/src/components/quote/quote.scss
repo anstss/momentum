@@ -12,13 +12,14 @@
     font-size: 16px;
   }
 
-  &__refresh-icon {
-    opacity: 0.7;
-    cursor: pointer;
-    transition: all 0.2s linear;
+  .icon {
+    padding: 5px;
+  }
+}
 
-    &:hover {
-      opacity: 1;
-    }
+@media (max-width: 600px) {
+  .quote {
+    order: -1;
+    margin-bottom: 25px;
   }
 }

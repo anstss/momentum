@@ -1,4 +1,4 @@
-.date-time {
+.date-time-greeting {
   .time {
     font-size: 120px;
   }
@@ -27,7 +27,7 @@
 }
 
 @media (max-width: 1200px) {
-  .date-time {
+  .date-time-greeting {
     .time {
       font-size: 100px;
     }
@@ -43,7 +43,7 @@
 }
 
 @media (max-width: 768px) {
-  .date-time {
+  .date-time-greeting {
     .time {
       font-size: 70px;
     }
@@ -60,7 +60,7 @@
 }
 
 @media (max-width: 576px) {
-  .date-time {
+  .date-time-greeting {
     .time {
       font-size: 50px;
     }

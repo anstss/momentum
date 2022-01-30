@@ -3,7 +3,7 @@ import "./date-time-greeting.scss";
 
 const DateTimeGreeting = () => {
   return (
-    <section className="date-time center-align">
+    <section className="date-time-greeting center-align">
       <div className="time">17:39:55</div>
       <div className="date">Saturday, January 29</div>
       <div className="greeting center-align">
