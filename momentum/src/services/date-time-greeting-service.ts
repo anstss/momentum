@@ -1,6 +1,8 @@
 import ITime from "../types/ITime";
+import { LOCAL_STORAGE_KEY } from "../shared/constants";
+import ILocalStorageData from "../types/ILocalStorageData";
 
-export class DateTimeService {
+export class DateTimeGreetingService {
   getCurrentTime = (): ITime => {
     const currentTime = new Date();
     const hours = currentTime.getHours();
@@ -29,5 +31,31 @@ export class DateTimeService {
     if (currentHours >= 12 && currentHours <= 17) return "afternoon";
     if (currentHours >= 18 && currentHours <= 23) return "evening";
     return "time of day not defined";
+  };
+
+  getUserNameFromLocalStorage = (): string => {
+    const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+    let userName = "";
+    if (data) {
+      const dataObj: ILocalStorageData = JSON.parse(data);
+      userName = dataObj.userName ? dataObj.userName : "";
+    }
+    return userName;
+  };
+
+  saveUserNameToLocalStorage = (userName: string): void => {
+    const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (data) {
+      const oldData: ILocalStorageData = JSON.parse(data);
+      localStorage.setItem(
+        LOCAL_STORAGE_KEY,
+        JSON.stringify({
+          ...oldData,
+          userName,
+        })
+      );
+      return;
+    }
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ userName }));
   };
 }

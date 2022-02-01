@@ -4,16 +4,16 @@ import App from "./app";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
 import "normalize.css";
-import { DateTimeServiceContext } from "./app/contexts";
-import { DateTimeService } from "./services/date-time-service";
+import { DateTimeGreetingServiceContext } from "./app/contexts";
+import { DateTimeGreetingService } from "./services/date-time-greeting-service";
 
-const dateTimeService = new DateTimeService();
+const dateTimeService = new DateTimeGreetingService();
 
 ReactDOM.render(
   <Provider store={store}>
-    <DateTimeServiceContext.Provider value={dateTimeService}>
+    <DateTimeGreetingServiceContext.Provider value={dateTimeService}>
       <App />
-    </DateTimeServiceContext.Provider>
+    </DateTimeGreetingServiceContext.Provider>
   </Provider>,
   document.getElementById("root")
 );

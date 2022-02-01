@@ -1,6 +1,6 @@
 import React from "react";
-import { DateTimeService } from "../services/date-time-service";
+import { DateTimeGreetingService } from "../services/date-time-greeting-service";
 
-export const DateTimeServiceContext = React.createContext(
-  new DateTimeService()
+export const DateTimeGreetingServiceContext = React.createContext(
+  new DateTimeGreetingService()
 );
