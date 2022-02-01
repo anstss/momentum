@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from "react";
 import "./date-time-greeting.scss";
-import ITimeState from "../../types/ITimeState";
+import ITime from "../../types/ITime";
 import { DateTimeService } from "../../services/date-time-service";
 
 const dateTimeService = new DateTimeService();
-const timeInitState: ITimeState = dateTimeService.getCurrentTime();
+const timeInitState: ITime = dateTimeService.getCurrentTime();
+const dateInitState = dateTimeService.getCurrentDate();
 
 const DateTimeGreeting = () => {
-  const [time, setTime] = useState<ITimeState>(timeInitState);
+  const [time, setTime] = useState<ITime>(timeInitState);
+  const [date, setDate] = useState<string>(dateInitState);
 
-  const updateTime = () => {
+  const updateDateTime = () => {
     const updatedTime = dateTimeService.getCurrentTime();
     setTime(updatedTime);
+    const updatedDate = dateTimeService.getCurrentDate();
+    setDate(updatedDate);
   };
 
   useEffect(() => {
-    const timeInterval = setInterval(updateTime, 500);
+    const timeInterval = setInterval(updateDateTime, 500);
     return () => clearInterval(timeInterval);
   }, []);
 
@@ -28,7 +32,7 @@ const DateTimeGreeting = () => {
         {minutes < 10 ? `0${minutes}` : minutes}:
         {seconds < 10 ? `0${seconds}` : seconds}
       </div>
-      <div className="date">Saturday, January 29</div>
+      <div className="date">{date}</div>
       <div className="greeting center-align">
         Good evening,
         <input

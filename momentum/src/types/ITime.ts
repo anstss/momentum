@@ -1,4 +1,4 @@
-export default interface ITimeState {
+export default interface ITime {
   hours: number;
   minutes: number;
   seconds: number;
