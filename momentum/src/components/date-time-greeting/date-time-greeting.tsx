@@ -1,17 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./date-time-greeting.scss";
 import ITime from "../../types/ITime";
-import { DateTimeService } from "../../services/date-time-service";
-
-const dateTimeService = new DateTimeService();
-const timeInitState: ITime = dateTimeService.getCurrentTime();
-const dateInitState = dateTimeService.getCurrentDate();
-const timeOfDayInitState = dateTimeService.getCurrentTimeOfDay();
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { DateTimeServiceContext } from "../../app/contexts";
+import { dateTimeGreetingSlice } from "../../app/slices/date-time-greeting-slice";
 
 const DateTimeGreeting = () => {
+  const dateTimeService = useContext(DateTimeServiceContext);
+  const timeInitState: ITime = dateTimeService.getCurrentTime();
+  const dateInitState = dateTimeService.getCurrentDate();
+
   const [time, setTime] = useState<ITime>(timeInitState);
   const [date, setDate] = useState<string>(dateInitState);
-  const [timeOfDay, setTimeOfDay] = useState<string>(timeOfDayInitState);
+
+  const dispatch = useAppDispatch();
+  const { timeOfDay } = useAppSelector(
+    (state) => state.dateTimeGreetingReducer
+  );
+  const { setTimeOfDay } = dateTimeGreetingSlice.actions;
 
   const updateDateTimeGreeting = () => {
     const updatedTime = dateTimeService.getCurrentTime();
@@ -19,10 +25,12 @@ const DateTimeGreeting = () => {
     const updatedDate = dateTimeService.getCurrentDate();
     setDate(updatedDate);
     const updatedTimeOfDay = dateTimeService.getCurrentTimeOfDay();
-    setTimeOfDay(updatedTimeOfDay);
+    dispatch(setTimeOfDay(updatedTimeOfDay));
   };
 
   useEffect(() => {
+    const timeOfDayInitState = dateTimeService.getCurrentTimeOfDay();
+    dispatch(setTimeOfDay(timeOfDayInitState));
     const timeInterval = setInterval(updateDateTimeGreeting, 500);
     return () => clearInterval(timeInterval);
   }, []);
