@@ -6,20 +6,24 @@ import { DateTimeService } from "../../services/date-time-service";
 const dateTimeService = new DateTimeService();
 const timeInitState: ITime = dateTimeService.getCurrentTime();
 const dateInitState = dateTimeService.getCurrentDate();
+const timeOfDayInitState = dateTimeService.getCurrentTimeOfDay();
 
 const DateTimeGreeting = () => {
   const [time, setTime] = useState<ITime>(timeInitState);
   const [date, setDate] = useState<string>(dateInitState);
+  const [timeOfDay, setTimeOfDay] = useState<string>(timeOfDayInitState);
 
-  const updateDateTime = () => {
+  const updateDateTimeGreeting = () => {
     const updatedTime = dateTimeService.getCurrentTime();
     setTime(updatedTime);
     const updatedDate = dateTimeService.getCurrentDate();
     setDate(updatedDate);
+    const updatedTimeOfDay = dateTimeService.getCurrentTimeOfDay();
+    setTimeOfDay(updatedTimeOfDay);
   };
 
   useEffect(() => {
-    const timeInterval = setInterval(updateDateTime, 500);
+    const timeInterval = setInterval(updateDateTimeGreeting, 500);
     return () => clearInterval(timeInterval);
   }, []);
 
@@ -34,7 +38,7 @@ const DateTimeGreeting = () => {
       </div>
       <div className="date">{date}</div>
       <div className="greeting center-align">
-        Good evening,
+        Good {timeOfDay},
         <input
           className="greeting__input center-align"
           placeholder="Enter name"
