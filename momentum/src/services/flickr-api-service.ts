@@ -10,12 +10,13 @@ interface IPhotoInfo {
 }
 
 const FLICKR_BASE_URL = "https://www.flickr.com/services/rest/";
+const FLICKR_API_KEY = "d00bdb3b02450e6914ccf2df29b86050";
 
 export class FlickrApiService {
   getImageList = async (timeOfDay: string) => {
     const params = {
       method: "flickr.photos.search",
-      api_key: "d00bdb3b02450e6914ccf2df29b86050",
+      api_key: FLICKR_API_KEY,
       tags: `nature,${timeOfDay}`,
       tag_mode: "all",
       format: "json",

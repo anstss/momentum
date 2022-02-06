@@ -30,7 +30,7 @@ function App() {
   );
 
   useEffect(() => {
-    const loadBackgroundImage = async () => {
+    const loadBackgroundImage = async (timeOfDay: string) => {
       try {
         const backgroundImageList =
           await flickrApiService.getFilteredBackgroundImageList(timeOfDay);
@@ -43,8 +43,8 @@ function App() {
         M.toast({ html: e.message });
       }
     };
-    loadBackgroundImage();
-  }, []);
+    loadBackgroundImage(timeOfDay);
+  }, [timeOfDay]);
 
   const loadPrevBackgroundImage = () => {
     if (backgroundImageIndex === null) return;
