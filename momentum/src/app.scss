@@ -5,7 +5,26 @@
   padding: 10px;
   width: 100vw;
   height: 100vh;
-  background-color: #535353;
+  background: #535353 center no-repeat;
+  background-size: cover;
   color: #fff;
   font-size: 18px;
+  font-weight: 500;
+
+  &__cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+    opacity: 0.3;
+  }
+
+  &__center-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+  }
 }

@@ -3,6 +3,11 @@
   cursor: pointer;
   transition: all 0.2s linear;
 
+  &--prev,
+  &--next {
+    font-size: 40px;
+  }
+
   &:hover {
     opacity: 1;
   }
@@ -14,4 +19,5 @@
   flex-wrap: wrap;
   width: 100%;
   margin-bottom: 0;
+  z-index: 10;
 }
