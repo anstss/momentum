@@ -11,6 +11,10 @@
   &:hover {
     opacity: 1;
   }
+
+  &--dark {
+    color: #000;
+  }
 }
 
 .small-container {
@@ -20,4 +24,8 @@
   width: 100%;
   margin-bottom: 0;
   z-index: 10;
+}
+
+.hidden {
+  visibility: hidden;
 }

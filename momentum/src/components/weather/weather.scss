@@ -1,0 +1,85 @@
+@import "/src/shared/owfont-regular.css";
+
+.weather {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+
+  &__main {
+    width: fit-content;
+    cursor: pointer;
+  }
+
+  &__container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+
+    &--left {
+      justify-content: flex-start;
+
+      .weather__temp {
+        font-size: 24px;
+      }
+    }
+  }
+
+  &__temp {
+    margin-left: 5px;
+  }
+
+  &__city-name {
+    font-size: 16px;
+  }
+
+  &__info {
+    position: absolute;
+    top: 65px;
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      right: 15px;
+      border-style: solid;
+      border-width: 0 15px 15px 15px;
+      border-color: transparent transparent #ffffff transparent;
+    }
+  }
+
+  &__form {
+    color: #000;
+  }
+
+  &__input {
+    height: 1.5rem !important;
+    font-weight: 500;
+  }
+
+  .icon--change {
+    position: absolute;
+    top: 5px;
+    font-size: 16px;
+
+    transition: visibility 0s;
+  }
+
+  &__additional-info {
+    font-size: 16px;
+    font-weight: 400;
+
+    .additional-info__description {
+      margin-bottom: 10px;
+
+      &:first-letter {
+        text-transform: uppercase;
+      }
+    }
+
+    .additional-info__text {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+  }
+}
