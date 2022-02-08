@@ -1,6 +1,8 @@
 import axios from "axios";
 import IOpenWeatherInfo from "../types/IOpenWeatherInfo";
 import IGeoCoordinates from "../types/IGeoCoordinates";
+import { DEFAULT_CITY, LOCAL_STORAGE_KEY } from "../shared/constants";
+import ILocalStorageData from "../types/ILocalStorageData";
 
 const OPEN_WEATHER_BASE_URL = "https://api.openweathermap.org/";
 const OPEN_WEATHER_API_KEY = "c9126e783d7509011a37bbe582612559";
@@ -43,5 +45,31 @@ export class OpenWeatherApiService {
     } catch (error) {
       throw new Error(`Something went wrong. Error: ${error.message}`);
     }
+  };
+
+  getCityFromLocalStorage = (): string => {
+    const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+    let city = DEFAULT_CITY;
+    if (data) {
+      const dataObj: ILocalStorageData = JSON.parse(data);
+      city = dataObj.city ? dataObj.city : DEFAULT_CITY;
+    }
+    return city;
+  };
+
+  saveCityToLocalStorage = (city: string): void => {
+    const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (data) {
+      const oldData: ILocalStorageData = JSON.parse(data);
+      localStorage.setItem(
+        LOCAL_STORAGE_KEY,
+        JSON.stringify({
+          ...oldData,
+          city,
+        })
+      );
+      return;
+    }
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ city }));
   };
 }

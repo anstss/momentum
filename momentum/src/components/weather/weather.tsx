@@ -4,15 +4,17 @@ import * as M from "materialize-css";
 import IOpenWeatherInfo from "../../types/IOpenWeatherInfo";
 import "./weather.scss";
 import { defineIconMode } from "../../shared/helpers";
+import { DEFAULT_CITY } from "../../shared/constants";
 
 const openWeatherApiService = new OpenWeatherApiService();
 
 const Weather = () => {
   const [weatherInfo, setWeatherInfo] = useState<IOpenWeatherInfo | null>(null);
-  const [city, setCity] = useState<string>("Kherson");
+  const [city, setCity] = useState<string>(DEFAULT_CITY);
   const [dayOrNightIconMode, setDayOrNightIconMode] = useState<string>("");
   const [additionalWeatherInfoIsVisible, setAdditionalWeatherInfoIsVisible] =
     useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const cityInput = useRef<HTMLInputElement>(null);
 
@@ -46,24 +48,36 @@ const Weather = () => {
         cityName
       );
       setWeatherInfo(currentWeatherInfo);
+      setError(null);
     } catch (e) {
-      M.toast({ html: e.message });
+      setError(e.message);
     }
   };
 
   const updateCity = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newCity = event.target.value;
     setCity(newCity);
+    openWeatherApiService.saveCityToLocalStorage(newCity);
   };
 
   const updateWeather = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     loadWeather(city);
+    openWeatherApiService.saveCityToLocalStorage(city);
   };
 
   useEffect(() => {
-    loadWeather(city);
+    const userCity = openWeatherApiService.getCityFromLocalStorage();
+    setCity(userCity);
   }, []);
+
+  useEffect(() => {
+    loadWeather(city);
+    const weatherInterval = setInterval(() => {
+      loadWeather(city);
+    }, 600000);
+    return () => clearInterval(weatherInterval);
+  }, [city]);
 
   useEffect(() => {
     document.body.addEventListener("click", changeAddWeatherInfoVisibility);
@@ -122,36 +136,42 @@ const Weather = () => {
               create
             </i>
           </div>
-          <div className="weather__container weather__container--left">
-            <i
-              className={`owf owf-3x owf-${weatherInfo?.weather[0].id} icon--dark`}
-            ></i>
-            <span className="weather__temp">
-              {weatherInfo?.main.temp
-                ? Math.round(weatherInfo?.main.temp) + "°C"
-                : ""}
-            </span>
-          </div>
-          <div className="weather__additional-info">
-            <div className="additional-info__description">
-              {weatherInfo?.weather[0].description}
-            </div>
-            <div className="additional-info__text">
-              Feels like:{" "}
-              {weatherInfo?.main.feels_like !== undefined
-                ? Math.round(weatherInfo?.main.feels_like) + "°C"
-                : ""}
-            </div>
-            <div className="additional-info__text">
-              Humidity: {weatherInfo?.main.humidity}%
-            </div>
-            <div className="additional-info__text">
-              Wind speed: {weatherInfo?.wind.speed} m/s
-            </div>
-            <div className="additional-info__text">
-              Wind gusts: {weatherInfo?.wind.gust} m/s
-            </div>
-          </div>
+          {error ? (
+            <div className="weather__additional-info">{error}</div>
+          ) : (
+            <React.Fragment>
+              <div className="weather__container weather__container--left">
+                <i
+                  className={`owf owf-3x owf-${weatherInfo?.weather[0].id} icon--dark`}
+                ></i>
+                <span className="weather__temp">
+                  {weatherInfo?.main.temp
+                    ? Math.round(weatherInfo?.main.temp) + "°C"
+                    : ""}
+                </span>
+              </div>
+              <div className="weather__additional-info">
+                <div className="additional-info__description">
+                  {weatherInfo?.weather[0].description}
+                </div>
+                <div className="additional-info__text">
+                  Feels like:{" "}
+                  {weatherInfo?.main.feels_like !== undefined
+                    ? Math.round(weatherInfo?.main.feels_like) + "°C"
+                    : ""}
+                </div>
+                <div className="additional-info__text">
+                  Humidity: {weatherInfo?.main.humidity}%
+                </div>
+                <div className="additional-info__text">
+                  Wind speed: {weatherInfo?.wind.speed} m/s
+                </div>
+                <div className="additional-info__text">
+                  Wind gusts: {weatherInfo?.wind.gust} m/s
+                </div>
+              </div>
+            </React.Fragment>
+          )}
         </form>
       </div>
     </section>
