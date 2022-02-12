@@ -1,0 +1,49 @@
+.todo {
+  position: relative;
+
+  &__container {
+    // display: none;
+    position: absolute;
+    bottom: 15px;
+    right: 0;
+    background-color: #fff;
+    width: 300px;
+    // min-width: 250px;
+  }
+
+  &__select {
+    margin-top: 0;
+  }
+
+  &__list {
+    border: none;
+  }
+
+  &__item {
+    padding: 0 0 10px !important;
+    border: none !important;
+  }
+
+  &__text {
+    width: 80%;
+  }
+
+  .done {
+    text-decoration: line-through;
+  }
+
+  &__input {
+    margin: 0;
+    line-height: normal;
+    width: 75% !important;
+    word-wrap: break-word;
+
+    &__elem {
+      height: 1.5rem !important;
+    }
+  }
+
+  .input-add-edit {
+    width: 85% !important;
+  }
+}

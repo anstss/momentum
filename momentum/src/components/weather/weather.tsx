@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { OpenWeatherApiService } from "../../services/open-weather-api-service";
-import * as M from "materialize-css";
 import IOpenWeatherInfo from "../../types/IOpenWeatherInfo";
 import "./weather.scss";
 import { defineIconMode } from "../../shared/helpers";

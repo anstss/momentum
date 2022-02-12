@@ -29,6 +29,21 @@ function App() {
     (state) => state.dateTimeGreetingReducer
   );
 
+  const initSelects = () => {
+    const elems = document.querySelectorAll("select");
+    const instances = M.FormSelect.init(elems);
+  };
+
+  const initTooltips = () => {
+    const elems = document.querySelectorAll(".tooltipped");
+    const instances = M.Tooltip.init(elems);
+  };
+
+  useEffect(() => {
+    initSelects();
+    initTooltips();
+  }, []);
+
   useEffect(() => {
     const loadBackgroundImage = async (timeOfDay: string) => {
       try {
