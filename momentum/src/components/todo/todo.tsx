@@ -10,6 +10,7 @@ interface ITodo {
   text: string;
   type: typeof TODO_TYPE | typeof IN_PROGRESS_TYPE;
   done: boolean;
+  showMenu: boolean;
 }
 
 const todos: ITodo[] = [
@@ -18,24 +19,28 @@ const todos: ITodo[] = [
     text: "My todo 1",
     type: "to-do",
     done: false,
+    showMenu: false,
   },
   {
     id: 8864115166,
     text: "My todo tototototo",
     type: "to-do",
     done: false,
+    showMenu: false,
   },
   {
     id: 864184776166,
     text: "My todo 9846516",
     type: "in-progress",
     done: true,
+    showMenu: false,
   },
   {
     id: 8645635631166,
     text: "My todo 1sefeff",
     type: "in-progress",
     done: false,
+    showMenu: false,
   },
 ];
 
@@ -57,6 +62,7 @@ const Todo = () => {
   ) => {
     const type = event.target.value;
     setTodoType(type);
+    hideItemMenu(event, fullTodoList);
   };
 
   //FULL LIST TODOS!!!!!!!!!!!!
@@ -71,7 +77,7 @@ const Todo = () => {
   const handleChangeTodoType = (id: number) => {
     const newTodoList = changeTodoType(fullTodoList, id);
     if (!newTodoList.length) return;
-    setFullTodoList(newTodoList);
+    toggleItemMenu(newTodoList, id);
   };
 
   const changeTodoType = (list: ITodo[], id: number): ITodo[] => {
@@ -109,6 +115,57 @@ const Todo = () => {
     ];
   };
 
+  const toggleItemMenu = (list: ITodo[], id: number) => {
+    const todoIndex = list.findIndex((todo) => todo.id === id);
+    const menuIsVisible = list[todoIndex].showMenu;
+    const hiddenMenuList = list.map((todo) => {
+      return {
+        ...todo,
+        showMenu: false,
+      };
+    });
+    const newTodoList = [
+      ...hiddenMenuList.slice(0, todoIndex),
+      {
+        ...hiddenMenuList[todoIndex],
+        showMenu: !menuIsVisible,
+      },
+      ...hiddenMenuList.slice(todoIndex + 1),
+    ];
+    setFullTodoList(newTodoList);
+  };
+
+  const hideItemMenu = (
+    event:
+      | React.MouseEvent<HTMLDivElement, MouseEvent>
+      | MouseEvent
+      | React.ChangeEvent<HTMLSelectElement>,
+    list: ITodo[]
+  ) => {
+    const target = event.target as HTMLElement;
+    if (!target) return;
+    if (target.dataset.itemMenu) return;
+    const newList = list.map((todo) => {
+      return {
+        ...todo,
+        showMenu: false,
+      };
+    });
+    setFullTodoList(newList);
+  };
+
+  useEffect(() => {
+    const helper = () => {
+      return (e: React.MouseEvent<HTMLDivElement, MouseEvent> | MouseEvent) => {
+        hideItemMenu(e, fullTodoList);
+      };
+    };
+    document.body.addEventListener("click", helper);
+    return () => {
+      document.body.removeEventListener("click", helper);
+    };
+  }, [fullTodoList]);
+
   return (
     <section className="todo col s6 m2 right-align">
       <span className={"icon"}>Todo</span>
@@ -122,10 +179,35 @@ const Todo = () => {
         </div>
         <ul className="collection black-text left-align todo__list">
           {currentTodoList.map((todo: ITodo) => {
-            const { id, text, type, done } = todo;
+            const { id, text, type, done, showMenu } = todo;
 
             return (
-              <li className="collection-item todo__item" key={`${id}${text}`}>
+              <li className="collection-item todo__item" key={`${id}`}>
+                <div
+                  className={`card-panel todo__item-menu ${
+                    showMenu ? "" : "hidden"
+                  }`}
+                >
+                  <div
+                    data-item-menu={true}
+                    className={"collection-item menu-item"}
+                  >
+                    Edit
+                  </div>
+                  <div
+                    data-item-menu={true}
+                    className={"collection-item menu-item"}
+                    onClick={() => handleChangeTodoType(id)}
+                  >{`Move to ${
+                    type === TODO_TYPE ? "In Progress" : "To Do"
+                  }`}</div>
+                  <div
+                    data-item-menu={true}
+                    className={"collection-item menu-item"}
+                  >
+                    Delete
+                  </div>
+                </div>
                 <div>
                   <label>
                     <input
@@ -139,26 +221,13 @@ const Todo = () => {
                     </span>
                   </label>
                   <span className="secondary-content">
-                    <i className="material-icons icon">mode_edit</i>
-                    {type === TODO_TYPE ? (
-                      <i
-                        className="material-icons icon tooltipped"
-                        data-position="top"
-                        data-tooltip="Move to In Progress"
-                        onClick={() => handleChangeTodoType(id)}
-                      >
-                        call_received
-                      </i>
-                    ) : (
-                      <i
-                        className="material-icons icon tooltipped"
-                        data-position="top"
-                        data-tooltip="Move to To Do"
-                        onClick={() => handleChangeTodoType(id)}
-                      >
-                        call_made
-                      </i>
-                    )}
+                    <i
+                      data-item-menu={true}
+                      className="material-icons icon"
+                      onClick={(e) => toggleItemMenu(fullTodoList, id)}
+                    >
+                      more_vert
+                    </i>
                   </span>
                 </div>
               </li>

@@ -2,13 +2,11 @@
   position: relative;
 
   &__container {
-    // display: none;
     position: absolute;
     bottom: 15px;
     right: 0;
     background-color: #fff;
     width: 300px;
-    // min-width: 250px;
   }
 
   &__select {
@@ -22,6 +20,39 @@
   &__item {
     padding: 0 0 10px !important;
     border: none !important;
+  }
+
+  &__item-menu {
+    position: relative;
+    left: 30%;
+    z-index: 10;
+    width: 70%;
+    padding: 5px;
+    margin: 0 0 10px;
+    background-color: #f3f3f3;
+    box-shadow: none;
+    font-size: 14px;
+
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: -9px;
+      right: 2px;
+      z-index: 10;
+      border-style: solid;
+      border-width: 10px 10px 0 10px;
+      border-color: #f3f3f3 transparent transparent transparent;
+    }
+
+    .menu-item {
+      padding: 5px 10px;
+      background-color: inherit;
+
+      &:hover {
+        cursor: pointer;
+        background-color: #dcdcdc;
+      }
+    }
   }
 
   &__text {
