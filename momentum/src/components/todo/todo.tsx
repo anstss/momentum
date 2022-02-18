@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./todo.scss";
+import ITodo from "../../types/ITodo";
+import { DONE_TYPE, IN_PROGRESS_TYPE, TODO_TYPE } from "../../shared/constants";
+import { TodoService } from "../../services/todo-service";
 
-const TODO_TYPE = "to-do";
-const IN_PROGRESS_TYPE = "in-progress";
-const DONE_TYPE = "done";
-
-interface ITodo {
-  id: number;
-  text: string;
-  type: typeof TODO_TYPE | typeof IN_PROGRESS_TYPE;
-  done: boolean;
-  showMenu: boolean;
-}
+const todoService = new TodoService();
 
 const todos: ITodo[] = [
   {
@@ -50,12 +43,13 @@ const Todo = () => {
   const [todoType, setTodoType] = useState<string>(TODO_TYPE);
   const [todoMenuVisibility, setTodoMenuVisibility] = useState<boolean>(false);
 
-  const handleChangeTodoVisibility = (
-    event: React.MouseEvent<Element, MouseEvent>
-  ) => {
-    setTodoMenuVisibility(!todoMenuVisibility);
-    hideItemMenu(event, fullTodoList);
-  };
+  const {
+    filterTodo,
+    hideItemMenu,
+    changeTodoType,
+    toggleItemMenuVisibility,
+    changeTodoDoneState,
+  } = todoService;
 
   useEffect(() => {
     setFullTodoList(todos);
@@ -65,42 +59,27 @@ const Todo = () => {
     setCurrentTodoList(filterTodo(fullTodoList, todoType));
   }, [fullTodoList, todoType]);
 
+  const handleChangeTodoVisibility = (
+    event: React.MouseEvent<Element, MouseEvent>
+  ) => {
+    setTodoMenuVisibility(!todoMenuVisibility);
+    hideItemMenu(event, fullTodoList);
+  };
+
   const handleShowToDoByType = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const type = event.target.value;
     setTodoType(type);
-    hideItemMenu(event, fullTodoList);
-  };
-
-  //FULL LIST TODOS!!!!!!!!!!!!
-  const filterTodo = (list: ITodo[], type: string) => {
-    return list.filter((todo: ITodo) => {
-      if (type === TODO_TYPE || type === IN_PROGRESS_TYPE)
-        return todo.type === type;
-      if (type === DONE_TYPE) return todo.done;
-    });
+    const newList = hideItemMenu(event, fullTodoList);
+    if (!newList) return;
+    setFullTodoList(newList);
   };
 
   const handleChangeTodoType = (id: number) => {
     const newTodoList = changeTodoType(fullTodoList, id);
     if (!newTodoList.length) return;
-    toggleItemMenu(newTodoList, id);
-  };
-
-  const changeTodoType = (list: ITodo[], id: number): ITodo[] => {
-    const todoIndex = list.findIndex((todo) => todo.id === id);
-    if (todoIndex === -1) return list;
-    const newType =
-      list[todoIndex].type === TODO_TYPE ? IN_PROGRESS_TYPE : TODO_TYPE;
-    return [
-      ...list.slice(0, todoIndex),
-      {
-        ...list[todoIndex],
-        type: newType,
-      },
-      ...list.slice(todoIndex + 1),
-    ];
+    setFullTodoList(toggleItemMenuVisibility(newTodoList, id));
   };
 
   const handleChangeTodoDoneState = (id: number) => {
@@ -109,63 +88,16 @@ const Todo = () => {
     setFullTodoList(newTodoList);
   };
 
-  const changeTodoDoneState = (list: ITodo[], id: number): ITodo[] => {
-    const todoIndex = list.findIndex((todo) => todo.id === id);
-    if (todoIndex === -1) return list;
-    const newDoneState = !list[todoIndex].done;
-    return [
-      ...list.slice(0, todoIndex),
-      {
-        ...list[todoIndex],
-        done: newDoneState,
-      },
-      ...list.slice(todoIndex + 1),
-    ];
-  };
-
-  const toggleItemMenu = (list: ITodo[], id: number) => {
-    const todoIndex = list.findIndex((todo) => todo.id === id);
-    const menuIsVisible = list[todoIndex].showMenu;
-    const hiddenMenuList = list.map((todo) => {
-      return {
-        ...todo,
-        showMenu: false,
-      };
-    });
-    const newTodoList = [
-      ...hiddenMenuList.slice(0, todoIndex),
-      {
-        ...hiddenMenuList[todoIndex],
-        showMenu: !menuIsVisible,
-      },
-      ...hiddenMenuList.slice(todoIndex + 1),
-    ];
-    setFullTodoList(newTodoList);
-  };
-
-  const hideItemMenu = (
-    event:
-      | React.MouseEvent<Element, MouseEvent>
-      | MouseEvent
-      | React.ChangeEvent<HTMLSelectElement>,
-    list: ITodo[]
-  ) => {
-    const target = event.target as HTMLElement;
-    if (!target) return;
-    if (target.dataset.itemMenu) return;
-    const newList = list.map((todo) => {
-      return {
-        ...todo,
-        showMenu: false,
-      };
-    });
-    setFullTodoList(newList);
+  const handleChangeItemMenuVisibility = (id: number) => {
+    setFullTodoList(toggleItemMenuVisibility(fullTodoList, id));
   };
 
   useEffect(() => {
     const helper = () => {
       return (e: React.MouseEvent<HTMLDivElement, MouseEvent> | MouseEvent) => {
-        hideItemMenu(e, fullTodoList);
+        const newList = hideItemMenu(e, fullTodoList);
+        if (!newList) return;
+        setFullTodoList(newList);
       };
     };
     document.body.addEventListener("click", helper);
@@ -238,7 +170,7 @@ const Todo = () => {
                     <i
                       data-item-menu={true}
                       className="material-icons icon"
-                      onClick={(e) => toggleItemMenu(fullTodoList, id)}
+                      onClick={() => handleChangeItemMenuVisibility(id)}
                     >
                       more_vert
                     </i>
