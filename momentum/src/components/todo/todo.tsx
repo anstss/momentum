@@ -48,6 +48,14 @@ const Todo = () => {
   const [fullTodoList, setFullTodoList] = useState<ITodo[]>([]);
   const [currentTodoList, setCurrentTodoList] = useState<ITodo[]>([]);
   const [todoType, setTodoType] = useState<string>(TODO_TYPE);
+  const [todoMenuVisibility, setTodoMenuVisibility] = useState<boolean>(false);
+
+  const handleChangeTodoVisibility = (
+    event: React.MouseEvent<Element, MouseEvent>
+  ) => {
+    setTodoMenuVisibility(!todoMenuVisibility);
+    hideItemMenu(event, fullTodoList);
+  };
 
   useEffect(() => {
     setFullTodoList(todos);
@@ -137,7 +145,7 @@ const Todo = () => {
 
   const hideItemMenu = (
     event:
-      | React.MouseEvent<HTMLDivElement, MouseEvent>
+      | React.MouseEvent<Element, MouseEvent>
       | MouseEvent
       | React.ChangeEvent<HTMLSelectElement>,
     list: ITodo[]
@@ -168,8 +176,14 @@ const Todo = () => {
 
   return (
     <section className="todo col s6 m2 right-align">
-      <span className={"icon"}>Todo</span>
-      <div className={"todo__container card-panel"}>
+      <span className={"icon"} onClick={handleChangeTodoVisibility}>
+        Todo
+      </span>
+      <div
+        className={`todo__container card-panel ${
+          todoMenuVisibility ? "" : "hidden"
+        }`}
+      >
         <div className="input-field todo__select">
           <select onChange={handleShowToDoByType}>
             <option value={TODO_TYPE}>To Do</option>
