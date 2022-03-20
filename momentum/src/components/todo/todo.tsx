@@ -20,6 +20,7 @@ const Todo = () => {
     toggleItemMenuVisibility,
     changeTodoDoneState,
     getTodosFromLocalStorage,
+    saveTodosToLocalStorage,
     addTodo,
   } = todoService;
 
@@ -73,6 +74,10 @@ const Todo = () => {
   useEffect(() => {
     setCurrentTodoList(filterTodo(fullTodoList, todoType));
   }, [fullTodoList, todoType]);
+
+  useEffect(() => {
+    saveTodosToLocalStorage(fullTodoList);
+  }, [fullTodoList]);
 
   useEffect(() => {
     const helper = () => {
