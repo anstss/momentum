@@ -22,6 +22,7 @@ const Todo = () => {
     getTodosFromLocalStorage,
     saveTodosToLocalStorage,
     addTodo,
+    deleteTodo,
   } = todoService;
 
   const handleChangeTodoVisibility = (
@@ -67,8 +68,17 @@ const Todo = () => {
     setNewTodo("");
   };
 
-  useEffect(() => {
+  const handleDeleteTodo = (id: number) => {
+    deleteTodo(id);
     setFullTodoList(getTodosFromLocalStorage());
+  };
+
+  useEffect(() => {
+    const todos = getTodosFromLocalStorage().map((todo) => ({
+      ...todo,
+      showMenu: false,
+    }));
+    setFullTodoList(todos);
   }, []);
 
   useEffect(() => {
@@ -137,6 +147,7 @@ const Todo = () => {
                   <div
                     data-item-menu={true}
                     className={"collection-item menu-item"}
+                    onClick={() => handleDeleteTodo(id)}
                   >
                     Delete
                   </div>

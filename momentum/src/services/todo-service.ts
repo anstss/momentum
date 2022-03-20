@@ -125,4 +125,14 @@ export class TodoService {
     const updatedTodos = [...todos, todo];
     this.saveTodosToLocalStorage(updatedTodos);
   };
+
+  deleteTodo = (id: number) => {
+    const todos = this.getTodosFromLocalStorage();
+    const todoIndex = todos.findIndex((todo) => todo.id === id);
+    if (todoIndex === -1) return;
+    this.saveTodosToLocalStorage([
+      ...todos.slice(0, todoIndex),
+      ...todos.slice(todoIndex + 1),
+    ]);
+  };
 }
