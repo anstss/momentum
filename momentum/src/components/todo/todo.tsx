@@ -6,42 +6,12 @@ import { TodoService } from "../../services/todo-service";
 
 const todoService = new TodoService();
 
-const todos: ITodo[] = [
-  {
-    id: 8641166,
-    text: "My todo 1",
-    type: "to-do",
-    done: false,
-    showMenu: false,
-  },
-  {
-    id: 8864115166,
-    text: "My todo tototototo",
-    type: "to-do",
-    done: false,
-    showMenu: false,
-  },
-  {
-    id: 864184776166,
-    text: "My todo 9846516",
-    type: "in-progress",
-    done: true,
-    showMenu: false,
-  },
-  {
-    id: 8645635631166,
-    text: "My todo 1sefeff",
-    type: "in-progress",
-    done: false,
-    showMenu: false,
-  },
-];
-
 const Todo = () => {
   const [fullTodoList, setFullTodoList] = useState<ITodo[]>([]);
   const [currentTodoList, setCurrentTodoList] = useState<ITodo[]>([]);
   const [todoType, setTodoType] = useState<string>(TODO_TYPE);
   const [todoMenuVisibility, setTodoMenuVisibility] = useState<boolean>(false);
+  const [newTodo, setNewTodo] = useState<string>("");
 
   const {
     filterTodo,
@@ -49,15 +19,9 @@ const Todo = () => {
     changeTodoType,
     toggleItemMenuVisibility,
     changeTodoDoneState,
+    getTodosFromLocalStorage,
+    addTodo,
   } = todoService;
-
-  useEffect(() => {
-    setFullTodoList(todos);
-  }, []);
-
-  useEffect(() => {
-    setCurrentTodoList(filterTodo(fullTodoList, todoType));
-  }, [fullTodoList, todoType]);
 
   const handleChangeTodoVisibility = (
     event: React.MouseEvent<Element, MouseEvent>
@@ -91,6 +55,24 @@ const Todo = () => {
   const handleChangeItemMenuVisibility = (id: number) => {
     setFullTodoList(toggleItemMenuVisibility(fullTodoList, id));
   };
+
+  const handleChangeNewTodo = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNewTodo(event.target.value);
+  };
+
+  const handleAddTodo = () => {
+    addTodo(newTodo, todoType);
+    setFullTodoList(getTodosFromLocalStorage());
+    setNewTodo("");
+  };
+
+  useEffect(() => {
+    setFullTodoList(getTodosFromLocalStorage());
+  }, []);
+
+  useEffect(() => {
+    setCurrentTodoList(filterTodo(fullTodoList, todoType));
+  }, [fullTodoList, todoType]);
 
   useEffect(() => {
     const helper = () => {
@@ -187,9 +169,16 @@ const Todo = () => {
               id="first_name"
               type="text"
               className="todo__input__elem input-add-edit"
+              value={newTodo}
+              onChange={handleChangeNewTodo}
             />
           </span>
-          <i className="material-icons icon secondary-content">add</i>
+          <i
+            className="material-icons icon secondary-content"
+            onClick={handleAddTodo}
+          >
+            add
+          </i>
         </div>
       </div>
     </section>

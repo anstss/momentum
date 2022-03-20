@@ -1,6 +1,12 @@
 import ITodo from "../types/ITodo";
-import { DONE_TYPE, IN_PROGRESS_TYPE, TODO_TYPE } from "../shared/constants";
+import {
+  DONE_TYPE,
+  IN_PROGRESS_TYPE,
+  LOCAL_STORAGE_KEY,
+  TODO_TYPE,
+} from "../shared/constants";
 import React from "react";
+import ILocalStorageData from "../types/ILocalStorageData";
 
 export class TodoService {
   //FULL LIST TODOS!!!!!!!!!!!!
@@ -76,5 +82,47 @@ export class TodoService {
         showMenu: false,
       };
     });
+  };
+
+  getTodosFromLocalStorage = (): ITodo[] => {
+    const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+    let todos: ITodo[] = [];
+    if (data) {
+      const dataObj: ILocalStorageData = JSON.parse(data);
+      todos = dataObj.todos ? dataObj.todos : [];
+    }
+    return todos;
+  };
+
+  saveTodosToLocalStorage = (todos: ITodo[]): void => {
+    const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (data) {
+      const oldData: ILocalStorageData = JSON.parse(data);
+      localStorage.setItem(
+        LOCAL_STORAGE_KEY,
+        JSON.stringify({
+          ...oldData,
+          todos,
+        })
+      );
+      return;
+    }
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ todos }));
+  };
+
+  addTodo = (todoName: string, todoType: string) => {
+    const todo: ITodo = {
+      id: Date.now(),
+      text: todoName,
+      type:
+        todoType === TODO_TYPE || todoType === IN_PROGRESS_TYPE
+          ? todoType
+          : TODO_TYPE,
+      done: false,
+      showMenu: false,
+    };
+    const todos = this.getTodosFromLocalStorage();
+    const updatedTodos = [...todos, todo];
+    this.saveTodosToLocalStorage(updatedTodos);
   };
 }
