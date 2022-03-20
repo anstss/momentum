@@ -142,7 +142,7 @@ const Todo = () => {
                       type="checkbox"
                       className="filled-in"
                       checked={done}
-                      onClick={() => handleChangeTodoDoneState(id)}
+                      onChange={() => handleChangeTodoDoneState(id)}
                     />
                     <span className={`todo__text ${done ? "done" : ""}`}>
                       {text}
